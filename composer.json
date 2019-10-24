@@ -1,7 +1,7 @@
 {
     "name": "keops007/omnipay-payu-romania",
     "type": "library",
-    "description": "Common components for Omnipay payment processing library",
+    "description": "Common components for Omnipay - PayU Romania payment processing library",
     "keywords": [
         "gateway",
         "merchant",
