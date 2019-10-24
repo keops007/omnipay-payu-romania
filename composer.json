@@ -38,11 +38,11 @@
         }
     ],
     "autoload": {
-        "psr-4": { "Omnipay\\Common\\" : "src/Common" },
+        "psr-4": { "Keops007\\Omnipay\\PayURomania\\" : "src/Common" },
         "classmap": ["src/Omnipay.php"]
     },
     "require": {
-        "php": "^5.6|^7",
+        "php": "^7.1",
         "php-http/client-implementation": "^1",
         "php-http/message": "^1.5",
         "php-http/discovery": "^1.2.1",
@@ -59,15 +59,5 @@
         "branch-alias": {
             "dev-master": "3.0.x-dev"
         }
-    },
-    "suggest": {
-        "league/omnipay": "The default Omnipay package provides a default HTTP Adapter."
-    },
-    "scripts": {
-        "test": "phpunit",
-        "check-style": "phpcs -p --standard=PSR2 src/",
-        "fix-style": "phpcbf -p --standard=PSR2 src/"
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    }
 }
