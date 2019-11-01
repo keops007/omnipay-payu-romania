@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a437553c-1938-4684-8b40-08d843a78603" name="Default Changelist" comment="" />
+    <list default="true" id="9e08ca1d-eb3f-4ff5-8f35-66828992eabb" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -14,11 +14,10 @@
       <executable />
     </execution>
   </component>
-  <component name="ProjectId" id="1SdvJoYrkVbF4RhCfynyGopEXi1" />
+  <component name="ProjectId" id="1T0v0zCVpC8c0oiK563NmtcjMwU" />
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="W:/concept24-payu/github/payu-romania" />
-    <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -37,12 +36,12 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="a437553c-1938-4684-8b40-08d843a78603" name="Default Changelist" comment="" />
-      <created>1571906217852</created>
+      <changelist id="9e08ca1d-eb3f-4ff5-8f35-66828992eabb" name="Default Changelist" comment="" />
+      <created>1572609608699</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1571906217852</updated>
-      <workItem from="1571906218998" duration="1484000" />
+      <updated>1572609608699</updated>
+      <workItem from="1572609610102" duration="301000" />
     </task>
     <servers />
   </component>
