@@ -44,6 +44,7 @@ abstract class AbstractRequest extends OmnipayRequest
     {
         $ignoredKeys = [
             'AUTOMODE',
+            'ORDERSTATUS',
             'BACK_REF',
             'DEBUG',
             'BILL_FNAME',
@@ -52,6 +53,7 @@ abstract class AbstractRequest extends OmnipayRequest
             'BILL_PHONE',
             'BILL_ADDRESS',
             'BILL_CITY',
+            'BILL_COUNTRYCODE',
             'DELIVERY_FNAME',
             'DELIVERY_LNAME',
             'DELIVERY_PHONE',
@@ -72,7 +74,6 @@ abstract class AbstractRequest extends OmnipayRequest
                 $hash .= strlen($dataValue) . $dataValue;
             }
         }
-
         return $hash;
     }
 }

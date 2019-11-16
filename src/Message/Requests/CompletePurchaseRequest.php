@@ -10,12 +10,64 @@ use Omnipay\PayU\Message\Responses\CompletePurchaseResponse;
  */
 class CompletePurchaseRequest extends AbstractRequest
 {
+
+    /**
+     * @return mixed
+     */
+    public function getOrderStatus()
+    {
+        return $this->getParameter('orderStatus');
+    }
+
+    /**
+     * @param $value
+     * @return $this
+     */
+    public function setOrderStatus($value)
+    {
+        return $this->setParameter('orderStatus', $value);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrderCtrl()
+    {
+        return $this->getParameter('orderCtrl');
+    }
+
+    /**
+     * @param $value
+     * @return $this
+     */
+    public function setOrderCtrl($value)
+    {
+        return $this->setParameter('orderCtrl', $value);
+    }
+
     /**
      * @return array|mixed
      */
     public function getData()
     {
-        return $this->httpRequest->request->all();
+        $data = [];
+        $params = $this->getParameters();
+
+        if(isset($params['returnUrl']))
+        {
+            $data['RETURN_URL'] = $params['returnUrl'];
+        }
+
+        if(isset($params['orderCtrl']))
+        {
+            $data['HASH'] = $params['orderCtrl'];
+        }
+
+        if(isset($params['orderStatus']))
+        {
+            $data['ORDERSTATUS'] = $params['orderStatus'];
+        }
+        return $data;
     }
 
     /**
