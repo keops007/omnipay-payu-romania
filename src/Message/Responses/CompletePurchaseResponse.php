@@ -16,7 +16,7 @@ class CompletePurchaseResponse extends AbstractResponse implements RedirectRespo
      */
     public function isSuccessful()
     {
-        return $this->isSuccessfulStatus() && $this->verifyHash();
+        return $this->verifyHash();
     }
 
     /**
