@@ -119,7 +119,6 @@ class PurchaseRequest extends AbstractRequest
 
 
         $data['ORDER_HASH'] = $this->generateHash($data);
-//        dd($data);
         return $data;
     }
 
