@@ -112,7 +112,7 @@ class PurchaseRequest extends AbstractRequest
 
         if ($this->getTestMode()) {
             $data['DEBUG'] = 'TRUE';
-            $data['TESTORDER'] = 'TRUE';
+            $data['TESTORDER'] = 'FALSE';
         }
 
         $data = $this->filterNullValues($data);
