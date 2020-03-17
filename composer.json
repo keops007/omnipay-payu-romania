@@ -10,6 +10,7 @@
         "payment",
         "payu",
         "payu-russia",
+        "payu-romnania",
         "purchase"
     ],
     "homepage": "https://github.com/keops007/omnipay-payu-romania",
