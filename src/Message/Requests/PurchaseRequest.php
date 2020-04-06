@@ -36,6 +36,23 @@ class PurchaseRequest extends AbstractRequest
     /**
      * @return mixed
      */
+    public function getIsSandbox()
+    {
+        return $this->getParameter('isSandbox');
+    }
+
+    /**
+     * @param $value
+     * @return $this
+     */
+    public function setIsSandbox($value)
+    {
+        return $this->setParameter('isSandbox', $value);
+    }
+
+    /**
+     * @return mixed
+     */
     public function getOrderDate()
     {
         return $this->getParameter('orderDate');
@@ -73,7 +90,7 @@ class PurchaseRequest extends AbstractRequest
      */
     public function getData()
     {
-        if ($this->getTestMode()) {
+        if ($this->getTestMode() && $this->getisSandbox()) {
             $this->endpoint = $this->endpointTest;
         }
         $this->validate('transactionId', 'merchantName', 'orderDate', 'items');
@@ -112,13 +129,21 @@ class PurchaseRequest extends AbstractRequest
 
         if ($this->getTestMode()) {
             $data['DEBUG'] = 'TRUE';
-            $data['TESTORDER'] = 'FALSE';
+            if ($this->getisSandbox())
+            {
+                $data['TESTORDER'] = 'FALSE';
+            }
+            else
+            {
+                $data['TESTORDER'] = 'TRUE';
+            }
         }
 
         $data = $this->filterNullValues($data);
 
 
         $data['ORDER_HASH'] = $this->generateHash($data);
+//        dd($data);
         return $data;
     }
 
