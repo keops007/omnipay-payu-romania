@@ -1,4 +1,4 @@
-<?php
+Zz<?php
 
 namespace Omnipay\PayU\Message\Requests;
 
@@ -11,6 +11,7 @@ use Omnipay\PayU\Message\Responses\PurchaseResponse;
 class PurchaseRequest extends AbstractRequest
 {
     /**
+     * Endpoints
      * @var string
      */
     public $endpoint = 'https://secure.payu.ro/order/lu.php';
