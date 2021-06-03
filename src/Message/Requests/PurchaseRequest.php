@@ -1,4 +1,4 @@
-Zz<?php
+<?php
 
 namespace Omnipay\PayU\Message\Requests;
 
@@ -11,7 +11,6 @@ use Omnipay\PayU\Message\Responses\PurchaseResponse;
 class PurchaseRequest extends AbstractRequest
 {
     /**
-     * Endpoints
      * @var string
      */
     public $endpoint = 'https://secure.payu.ro/order/lu.php';
@@ -85,66 +84,191 @@ class PurchaseRequest extends AbstractRequest
         return $this->setParameter('orderTimeout', $value);
     }
 
+
+    /**
+     * @return mixed
+     */
+    public function getOrderShipping()
+    {
+        return $this->getParameter('orderShipping');
+    }
+
+    /**
+     * @param $value
+     * @return $this
+     */
+    public function setOrderShipping($value)
+    {
+        return $this->setParameter('orderShipping', $value);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrderAmount()
+    {
+        return $this->getParameter('orderAmount');
+    }
+
+    /**
+     * @param $value
+     * @return $this
+     */
+    public function setOrderAmount($value)
+    {
+        return $this->setParameter('orderAmount', $value);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrderName()
+    {
+        return $this->getParameter('orderName');
+    }
+
+    /**
+     * @param $value
+     * @return $this
+     */
+    public function setOrderName($value)
+    {
+        $value = str_replace(['+', '"', '\'', '«', '»'], '', $value);
+        return $this->setParameter('orderName', $value);
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrderId()
+    {
+        return $this->getParameter('orderId');
+    }
+
+    /**
+     * @param  string $value
+     * @return mixed
+     */
+    public function setOrderId($value)
+    {
+        return $this->setParameter('orderId', $value);
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrderVat()
+    {
+        return $this->getParameter('orderVat');
+    }
+
+    /**
+     * @param  string $value
+     * @return mixed
+     */
+    public function setOrderVat($value)
+    {
+        return $this->setParameter('orderVat', $value);
+    }
     /**
      * @return mixed
      * @throws \Omnipay\Common\Exception\InvalidRequestException
      */
     public function getData()
     {
-        if ($this->getTestMode() && $this->getisSandbox()) {
+        if ($this->getTestMode() && $this->getIsSandbox()) {
             $this->endpoint = $this->endpointTest;
         }
-        $this->validate('transactionId', 'merchantName', 'orderDate', 'items');
-
         $data['MERCHANT'] = $this->getMerchantName();
+        $data['BACK_REF'] = $this->getReturnUrl();
         $data['ORDER_REF'] = $this->getTransactionId();
         $data['ORDER_DATE'] = $this->getOrderDate();
-        $data['BACK_REF'] = $this->getReturnUrl();
-        $data['ORDER_TIMEOUT'] = $this->getOrderTimeout();
+        //$data['ORDER_TIMEOUT'] = $this->getOrderTimeout();
+        $orderAmount = $this->getOrderAmount();
+        if ($orderAmount)
+        {
+            $name[] = $this->getOrderName();
+            $pcode[] = $this->getOrderId();
+            $price[] = $orderAmount;
+            $qty[] = 1;
+            $vat[] = $this->getOrderVat();
 
-        foreach ($this->getItems() as $key => $item) {
-            $item->validate();
+            $data['ORDER_SHIPPING'] = "0";
+            $data['ORDER_HASH'] = '';
+            $data['PRICES_CURRENCY'] = $this->getCurrency();
+            $data['LANGUAGE'] = 'ro';
 
-            $data['ORDER_PNAME[' . $key . ']'] = $item->getName();
-            $data['ORDER_PCODE[' . $key . ']'] = $item->getCode();
-            $data['ORDER_PINFO[' . $key . ']'] = $item->getDescription();
-            $data['ORDER_PRICE[' . $key . ']'] = $item->getPrice();
-            $data['ORDER_QTY[' . $key . ']'] = $item->getQuantity();
-            $data['ORDER_VAT[' . $key . ']'] = $item->getVat();
+            $this->validate('transactionId', 'merchantName', 'orderDate');
+            $data['ORDER_PNAME'] = $name;
+            $data['ORDER_PCODE'] = $pcode;
+            $data['ORDER_PRICE'] = $price;
+            $data['ORDER_QTY'] = $qty;
+            $data['ORDER_VAT'] = $vat;
+
+        }
+        else
+        {
+            $data['ORDER_SHIPPING'] = $this->getOrderShipping();
+            $data['ORDER_HASH'] = '';
+            $data['PRICES_CURRENCY'] = $this->getCurrency();
+            $data['LANGUAGE'] = 'ro';
+
+            $this->validate('transactionId', 'merchantName', 'orderDate', 'items');
+            foreach ($this->getItems() as $key => $item) {
+                $item->validate();
+
+                $data['ORDER_PNAME[' . $key . ']'] = $item->getName();
+                $data['ORDER_PCODE[' . $key . ']'] = $item->getCode();
+                $data['ORDER_PINFO[' . $key . ']'] = $item->getDescription();
+                $data['ORDER_PRICE[' . $key . ']'] = $item->getPrice();
+                $data['ORDER_QTY[' . $key . ']'] = $item->getQuantity();
+                $data['ORDER_VAT[' . $key . ']'] = $item->getVat();
+            }
+
+            foreach ($this->getItems() as $key => $item) {
+                $data['ORDER_PRICE_TYPE[' . $key . ']'] = $item->getPriceType();
+            }
+
+
         }
 
-        $data['PRICES_CURRENCY'] = $this->getCurrency();
-        $data['PAY_METHOD'] = $this->getPaymentMethod();
 
-        foreach ($this->getItems() as $key => $item) {
-            $data['ORDER_PRICE_TYPE[' . $key . ']'] = $item->getPriceType();
-        }
+
+        //$data['PAY_METHOD'] = $this->getPaymentMethod();
 
         if ($card = $this->getCard()) {
-            $data['BILL_LNAME'] = $card->getBillingLastName();
             $data['BILL_FNAME'] = $card->getBillingFirstName();
+            $data['BILL_LNAME'] = $card->getBillingLastName();
+            $data['BILL_CISERIAL'] = '';
+            $data['BILL_CINUMBER'] = '';
+            $data['BILL_CIISSUER'] = '';
+            $data['BILL_CNP'] = '';
+            $data['BILL_COMPANY'] = $card->getBillingCompany();
+            $data['BILL_FISCALCODE'] = '';
+            $data['BILL_REGNUMBER'] = '';
+            $data['BILL_BANK'] = '';
+            $data['BILL_BANKACCOUNT'] = '';
             $data['BILL_EMAIL'] = $card->getEmail();
             $data['BILL_PHONE'] = $card->getBillingPhone();
+            $data['BILL_FAX'] = $card->getFax();
+            $data['BILL_ADDRESS'] = $card->getAddress1();
+            $data['BILL_ADDRESS2'] = $card->getAddress2();
+            $data['BILL_ZIPCODE'] = $card->getPostcode();
+            $data['BILL_CITY'] = $card->getCity();
+            $data['BILL_STATE'] = $card->getState();
             $data['BILL_COUNTRYCODE'] = $card->getBillingCountry();
         }
 
         if ($this->getTestMode()) {
-            $data['DEBUG'] = 'TRUE';
-            if ($this->getisSandbox())
-            {
-                $data['TESTORDER'] = 'FALSE';
-            }
-            else
-            {
-                $data['TESTORDER'] = 'TRUE';
-            }
+            //$data['DEBUG'] = 'TRUE';
+            //$data['TESTORDER'] = 'FALSE';
         }
 
-        $data = $this->filterNullValues($data);
+        //$data = $this->filterNullValues($data);
 
 
         $data['ORDER_HASH'] = $this->generateHash($data);
-//        dd($data);
+
         return $data;
     }
 

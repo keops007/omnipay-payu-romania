@@ -33,7 +33,38 @@ abstract class AbstractRequest extends OmnipayRequest
      */
     public function generateHash(array $data)
     {
-        return hash_hmac('md5', $this->hasher($data), $this->getSecretKey());
+        $dataForHash = [
+            'MERCHANT' => isset($data['MERCHANT']) ? $data['MERCHANT'] : null,
+            'ORDER_REF' => isset($data['ORDER_REF']) ? $data['ORDER_REF'] : null,
+            'ORDER_DATE' => isset($data['ORDER_DATE']) ? $data['ORDER_DATE'] : null,
+            'ORDER_PNAME' => isset($data['ORDER_PNAME']) ? $data['ORDER_PNAME'] : null,
+            'ORDER_PCODE' => isset($data['ORDER_PCODE']) ? $data['ORDER_PCODE'] : null,
+            'ORDER_PRICE' => isset($data['ORDER_PRICE']) ? $data['ORDER_PRICE'] : null,
+            'ORDER_QTY' => isset($data['ORDER_QTY']) ? $data['ORDER_QTY'] : null,
+            'ORDER_VAT' => isset($data['ORDER_VAT']) ? $data['ORDER_VAT'] : null,
+            'ORDER_SHIPPING' => isset($data['ORDER_SHIPPING']) ? $data['ORDER_SHIPPING'] : null,
+            'PRICES_CURRENCY' => isset($data['PRICES_CURRENCY']) ? $data['PRICES_CURRENCY'] : null,
+        ];
+
+        if (isset($data['RETURN_URL']))
+            $dataForHash['RETURN_URL'] = $data['RETURN_URL'];
+
+        return hash_hmac('md5', $this->hasher($dataForHash), $this->getSecretKey());
+    }
+
+    /**
+     * @param array $data
+     * @return string
+     */
+    public function generateHashFromString(array $data)
+    {
+        $string = $data['BACK_REF'];
+
+        $string = stripslashes($string);
+        $size = strlen($string);
+        $return = $size . $string;
+
+        return hash_hmac('md5', $return, $this->getSecretKey());
     }
 
     /**
@@ -42,36 +73,18 @@ abstract class AbstractRequest extends OmnipayRequest
      */
     public function hasher(array $data)
     {
-        $ignoredKeys = [
-            'AUTOMODE',
-            'ORDERSTATUS',
-            'BACK_REF',
-            'DEBUG',
-            'BILL_FNAME',
-            'BILL_LNAME',
-            'BILL_EMAIL',
-            'BILL_PHONE',
-            'BILL_ADDRESS',
-            'BILL_CITY',
-            'BILL_COUNTRYCODE',
-            'DELIVERY_FNAME',
-            'DELIVERY_LNAME',
-            'DELIVERY_PHONE',
-            'DELIVERY_ADDRESS',
-            'DELIVERY_CITY',
-            'LU_ENABLE_TOKEN',
-            'LU_TOKEN_TYPE',
-            'LANGUAGE',
-            'HASH',
-        ];
+
 
         $hash = '';
-
+        //dd($data);
         foreach ($data as $dataKey => $dataValue) {
             if (is_array($dataValue)) {
-                $hash .= $this->hasher($dataValue);
-            } elseif (!in_array($dataKey, $ignoredKeys, true)) {
-                $hash .= strlen($dataValue) . $dataValue;
+                if ($dataValue!==null)
+                    $hash .= $this->hasher($dataValue);
+            } else
+            {
+                if ($dataValue!==null)
+                    $hash .= strlen($dataValue) . $dataValue;
             }
         }
         return $hash;

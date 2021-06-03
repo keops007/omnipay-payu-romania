@@ -4,6 +4,7 @@ namespace Omnipay\PayU\Message\Responses;
 
 use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\Common\Message\RedirectResponseInterface;
+use Omnipay\PayU\Message\Traits\RedirectHtmlTrait;
 
 /**
  * Class PurchaseResponse
@@ -11,6 +12,7 @@ use Omnipay\Common\Message\RedirectResponseInterface;
  */
 class PurchaseResponse extends AbstractResponse implements RedirectResponseInterface
 {
+    use RedirectHtmlTrait;
     /**
      * @return bool
      */

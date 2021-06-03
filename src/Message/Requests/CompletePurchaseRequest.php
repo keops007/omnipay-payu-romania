@@ -67,6 +67,11 @@ class CompletePurchaseRequest extends AbstractRequest
         {
             $data['ORDERSTATUS'] = $params['orderStatus'];
         }
+
+        if(isset($params['orderStatus']))
+        {
+            $data['ORDERSTATUS'] = $params['orderStatus'];
+        }
         return $data;
     }
 
